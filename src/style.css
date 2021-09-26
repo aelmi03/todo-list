@@ -1,0 +1,97 @@
+*, *::before, *::after{
+    box-sizing: border-box;
+    margin: 0;
+    padding:0;
+}
+
+header{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding:1rem;
+    color:white;
+    background-color: blueviolet;
+}
+
+.main-content{
+    display:flex;
+    flex-flow: row nowrap;
+    min-height: 100vh;
+
+}
+.sidebar{
+    display:flex;
+    flex-flow: column nowrap;
+    padding:1rem 0.4rem;
+    gap:1rem;
+    background-color: rgb(240, 240, 240);
+}
+
+.project{
+    transition: all 0.4s ease-in-out;
+    padding:0.5rem;
+    border-radius: 8px;
+}
+.project:hover, .active-project{
+    background-color: rgb(240, 232, 209);
+}
+.project > .inbox{
+    color:rgb(17, 141, 17)
+}
+.project > .today{
+    color:rgb(6, 88, 240);
+}
+.project > .next-week{
+    color:lightcoral;
+}
+h3{
+    text-align: center;
+    margin-top:1rem;
+}
+
+.tasks-content{
+    display:flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    padding:0.5rem 0.3rem;
+    flex-grow:1;
+    background-color: rgb(255, 255, 255);
+}
+.sidebar > .project{
+    display:flex;
+    align-items: center;
+    gap:0.9rem;
+}
+
+.add-project{
+    border-radius: 5px;
+    order:1;
+    font-weight: bold;
+    padding:0.2rem 0.5rem;
+    color:black;
+    background-color: white;
+    transition: all 0.4s ease-in-out;
+}
+
+.add-project:hover, .add-task:hover{
+    background-color: black;
+    color:white;
+}
+
+.add-task{
+    transition: all 0.4s ease-in-out;
+    margin-top:2.5rem;
+    border-radius: 5px;
+    font-weight: bold;
+    padding:0.2rem 1.8rem;
+    color:black;
+    background-color: white;
+}
+.project-list{
+    display:flex;
+    flex-flow: column nowrap;
+    align-items: flex-end;
+}
+li{
+    list-style: none;
+}

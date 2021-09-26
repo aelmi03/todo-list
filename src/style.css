@@ -180,8 +180,8 @@ li{
     border-radius: 5px;
 
 }
-.delete-task-icon:hover, .edit-task-icon:hover{
-    background-color: rgb(241, 241, 241);
+.edit-task-icon:hover, .delete-task-icon:hover{
+    background-color: rgb(233, 233, 233);
 }
 .priority-icon{
     color:rgb(255, 166, 0);

@@ -33,7 +33,7 @@ header{
     border-radius: 8px;
 }
 .project:hover, .active-project{
-    background-color: rgb(240, 232, 209);
+    background-color: rgb(255, 255, 255);
 }
 .project > .inbox{
     color:rgb(17, 141, 17)

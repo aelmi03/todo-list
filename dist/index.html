@@ -29,7 +29,7 @@
             <div class="tasks-list">
                 <div class="task task-completed">
                     <input type="checkbox">
-                    <p>Learn how to code </p>
+                    <p>Learning how to code </p>
                     <div class="task-icons">
                         <span class="material-icons-outlined priority-icon">trip_origin</span>
                         <span class="material-icons-outlined edit-task-icon">edit</span>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="task">
                     <input type="checkbox">
-                    <p>asdasdasdasdasdasda my science i am the greatest of all time this is the truly best experience</p>
+                    <p>asdasdasdasdasdasdaa</p>
                     <div class="task-icons">
                         <span class="material-icons-outlined priority-icon">trip_origin</span>
                         <span class="material-icons-outlined edit-task-icon">edit</span>
@@ -51,13 +51,31 @@
     <div class="add-project-modal">
         <h2>New Project</h2>
         <h3>Name:</h3>
-        <input type = "text">
+        <input type = "text" maxlength = "20">
         <div class="add-project-buttons">
           <button class="project-cancel">Cancel</button>
           <button class = "project-add">Add Project</button>
         </div>
     </div>
     <div class="add-task-modal">
+        <h2>New Task</h2>
+        <label for="title">Title: </label>
+        <input type="text" id="title" name="title" maxlength = "20"/>      
+        <label for="description">Description: </label>
+        <textarea id="description" name="description">
+        </textarea>       
+        <label for="due-date">Due Date: </label>
+        <input type="date" id="due-date" name="due-date"/>  
+        <label for="priority">Priority: </label>
+        <select name="priority" id="priority">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select>
+        <div class="add-task-buttons">
+            <button class="task-cancel">Cancel</button>
+            <button class = "task-add">Add Task</button>
+        </div>
     </div>
 </body>
 </html>

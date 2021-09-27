@@ -111,11 +111,11 @@ li{
     gap:1rem;
     border:2px solid rgb(0, 0, 0);
 }
-.add-project-buttons{
+.add-project-buttons, .add-task-buttons{
     display:flex;
     gap:0.8rem;
 }
-.add-project-buttons > button{
+.add-project-buttons > button, .add-task-buttons > button{
     padding:0.5rem 0.6rem; 
     border-radius: 8px;
     font-size:1rem;
@@ -128,16 +128,16 @@ li{
 .add-project-modal > h3{
     margin-top: 0;
 }
-.project-cancel{
+.project-cancel, .task-cancel{
     background-color: rgb(255, 0, 0);
     color:white;
 }
-.project-add{
+.project-add, .task-add{
     background-color: rgb(255, 255, 255);
     color:rgb(10, 4, 4);
     transition: all 0.4s ease-in-out;
 }
-.project-add:hover{
+.project-add:hover, .task-add:hover{
     color:White;
     background-color:rgb(255, 174, 0);
 }
@@ -150,7 +150,7 @@ li{
     gap:1rem;
 }
 .task{
-    font-size:0.9rem;
+    font-size:0.8rem;
     display:flex;
     justify-content: space-between;
     gap:0.4rem;
@@ -189,3 +189,41 @@ li{
 .delete-task-icon{
     color:red;
 }
+.add-task-modal{
+    background-color: rgb(255, 255, 255);
+    border:2px solid black;
+    padding:1.5rem 2.5rem;
+    border-radius: 5px;
+    display:flex;
+    display:none;
+    flex-flow: column nowrap;
+    align-items: center;
+    gap:1rem;
+    position: absolute;
+    left:50%;
+    top:30%;
+    color:black;
+    transform: translate(-50%,-30%);
+}
+.add-task-buttons > button{
+    padding:0.7rem 0.9rem;
+}
+
+.add-task-modal > input{
+    border-radius: 6px;
+    padding:0.25rem 0.4rem;
+    outline: none;
+}
+textarea[id = "description"]{
+  padding:0rem 2rem 3rem 2rem;
+  outline: none;
+  border-radius: 5px;
+}
+select{
+    padding:0.4rem 1.9rem;
+    border-radius: 2px;
+    background-color: white;
+}
+
+
+

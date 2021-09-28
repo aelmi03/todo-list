@@ -44,7 +44,7 @@ header{
    border:1px dotted rgb(119, 117, 119);
    justify-content: space-between;
    align-items: center;
-   gap:0.11rem;
+   gap:0.15rem;
 }
 .project-list p {
     font-size: 0.9rem;

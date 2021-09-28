@@ -200,6 +200,10 @@ li{
     border-radius: 5px;
 
 }
+
+.task > input {
+    transform:scale(0.7);
+}
 .edit-task-icon:hover, .delete-task-icon:hover{
     background-color: rgb(233, 233, 233);
 }

@@ -20,8 +20,12 @@
             <div class="project"><span class="material-icons-outlined next-week">next_week</span>Next Week</div>
             <h3>Projects</h3>
             <ul class = "project-list">
-                <li><button class="add-project">+ Add Project</button></li>
+                <div class="project">
+                    <p>Learning how to learn</p>
+                    <span class="material-icons-outlined">close</span>
+                </div>
             </ul>
+            <button class="add-project">+ Add Project</button>
         </div>
         <div class="tasks-content">
             <h2>Project Name</h2>
@@ -51,7 +55,7 @@
     <div class="add-project-modal">
         <h2>New Project</h2>
         <h3>Name:</h3>
-        <input type = "text" maxlength = "20">
+        <input id = "add-project-input" type = "text" maxlength = "20">
         <div class="add-project-buttons">
           <button class="project-cancel">Cancel</button>
           <button class = "project-add">Add Project</button>

@@ -28,9 +28,26 @@ header{
 }
 
 .project{
+    display:flex;
     transition: all 0.4s ease-in-out;
     padding:0.5rem;
     border-radius: 8px;
+}
+.project-list  span{
+    transform: scale(0.5);
+    color:white;
+    border-radius: 8px;
+    background-color: red;
+}
+.project-list > .project{
+   width:100%;
+   border:1px dotted rgb(119, 117, 119);
+   justify-content: space-between;
+   align-items: center;
+   gap:0.11rem;
+}
+.project-list p {
+    font-size: 0.9rem;
 }
 .project:hover, .active-project{
     background-color: rgb(255, 255, 255);
@@ -90,14 +107,16 @@ h3{
 .project-list{
     display:flex;
     flex-flow: column nowrap;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
+    gap:0.8rem;
 }
 li{
     list-style: none;
 }
 .add-project-modal{
     display:flex;
-    display:none;
+    opacity: 0;
     flex-flow: column nowrap;
     padding:1rem 4rem;
     background-color: rgb(255, 255, 255);
@@ -106,6 +125,7 @@ li{
     position: absolute;
     left:50%;
     top:30%;
+    transition: opacity 0.4s ease-in-out;
     color:black;
     transform: translate(-50%,-30%);
     gap:1rem;

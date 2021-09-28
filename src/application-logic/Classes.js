@@ -5,6 +5,7 @@ export const Task = (taskTitle, taskDescription, taskDueDate, taskPriority, isCo
     let priority = taskPriority;
     let status = isCompleted;
     let ID = taskID;
+    let project = null;
 
     const getTitle = () => {
         return title;
@@ -52,13 +53,21 @@ export const Task = (taskTitle, taskDescription, taskDueDate, taskPriority, isCo
     const setID = (id) => {
         ID = id;
     }
-
+    const getProject = () => {
+        return project;
+    }
+    const setProject = (newProject) => {
+        project = newProject;
+    }
     const toString = () => {
         return `task : ${title}, description : ${description},
          date : ${dueDate}, priority : ${priority}, ID : ${ID}`;
     }
 
-    return { getTitle, setTitle, getDescription, setDescription, getDueDate, setDueDate, getPriority, setPriority, getCompletionStatus, setCompletionStatus, getID, setID,toString };
+    
+
+    return { getTitle, setTitle, getDescription, setDescription, getDueDate, setDueDate, getPriority, setPriority, 
+        getCompletionStatus, setCompletionStatus, getID, setID, getProject , setProject, toString };
 }
 
 export const Project = (title) => {

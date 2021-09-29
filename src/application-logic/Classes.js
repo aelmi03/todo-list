@@ -15,7 +15,6 @@ export const Task = (taskTitle, taskDescription, taskDueDate, taskPriority, isCo
         title = newTitle;
     }
 
-
     const getDescription = () => {
         return description;
     }
@@ -87,6 +86,7 @@ export const Project = (title) => {
         
     }
     const addTask = (task) => {
+       task.setProject(this);
        tasks.push(task);
     }
 

@@ -23,6 +23,8 @@ export const mainContentModule = (() => {
     const createTaskDiv = (task, container) => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task");
+        taskDiv.setAttribute("task-id", task.getID());
+        taskDiv.setAttribute("project", task.getProject().getProjectName());
         const checkBox = document.createElement("input");
         checkBox.setAttribute("type", "checkbox");
         if(task.getCompletionStatus() === true){
@@ -53,6 +55,7 @@ export const mainContentModule = (() => {
         deleteSpan.classList.add("material-icons-outlined");
         deleteSpan.classList.add("delete-task-icon");
         deleteSpan.textContent = "delete";
+        deleteSpan.addEventListener("click", deleteTask);
         container.appendChild(prioritySpan);
         container.appendChild(editSpan);
         container.appendChild(deleteSpan);
@@ -67,6 +70,12 @@ export const mainContentModule = (() => {
         else if (priority === "Low"){
             span.style.color = "green";
         }
+    }
+    const deleteTask = (e) => {
+        const taskDiv = e.target.parentNode.parentNode;
+        const taskID = taskDiv.getAttribute("task-id");
+        const projectTaskBelongsTo = taskDiv.getAttribute("project");
+        Pubsub.publish("taskDeleted", [taskID, projectTaskBelongsTo]);
     }
     return {render};
 })();

@@ -1,5 +1,5 @@
 import {Pubsub} from './pubsub';
-import {Project} from './Classes';
+import {Project, Task} from './Classes';
 export const Data = (() => {
     const projectArray = [];
     const addProject = (projectName) => {
@@ -29,13 +29,21 @@ export const Data = (() => {
        const newTask = taskAndProjectInArray[0];
        newTask.setID(createUniqueID());
        const project = taskAndProjectInArray[1];
+       newTask.setProject(project);
        project.addTask(newTask); 
        Pubsub.publish("projectClickedOrUpdated", project);
+    }
+    const deleteTaskFromData = (taskIDAndProject) => {
+        const taskID = taskIDAndProject[0];
+        const project = getProject(taskIDAndProject[1]);
+        project.deleteTaskByID(taskID);
+        Pubsub.publish("projectClickedOrUpdated", project);
     }
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
     }
     Pubsub.subscribe("newTaskAdded", addNewTaskToData);
     Pubsub.subscribe("projectDeleted", deleteProject);
+    Pubsub.subscribe("taskDeleted", deleteTaskFromData);
     return {getProjects};
 })();

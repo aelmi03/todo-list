@@ -86,7 +86,6 @@ export const Project = (title) => {
         
     }
     const addTask = (task) => {
-       task.setProject(this);
        tasks.push(task);
     }
 

@@ -39,9 +39,19 @@ export const Data = (() => {
         project.deleteTaskByID(taskID);
         Pubsub.publish("projectClickedOrUpdated", project);
     }
+    const changeTaskCompletionStatus = (taskIDAndProject) => {
+        const taskID = taskIDAndProject[0];
+        const project = getProject(taskIDAndProject[1]);
+        const task = project.findTaskByID(taskID);
+        const currentCompletionStatus = task.getCompletionStatus();
+        task.setCompletionStatus((currentCompletionStatus === false) ? true : false);
+        Pubsub.publish("projectClickedOrUpdated", project);
+        
+    }
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
     }
+    Pubsub.subscribe("taskCompletionStatusChanged", changeTaskCompletionStatus);
     Pubsub.subscribe("newTaskAdded", addNewTaskToData);
     Pubsub.subscribe("projectDeleted", deleteProject);
     Pubsub.subscribe("taskDeleted", deleteTaskFromData);

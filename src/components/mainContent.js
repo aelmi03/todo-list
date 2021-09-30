@@ -27,6 +27,7 @@ export const mainContentModule = (() => {
         taskDiv.setAttribute("project", task.getProject().getProjectName());
         const checkBox = document.createElement("input");
         checkBox.setAttribute("type", "checkbox");
+        checkBox.addEventListener('click', makeTaskComplete);
         if(task.getCompletionStatus() === true){
             taskDiv.classList.add("task-completed");
             checkBox.checked = true;
@@ -76,6 +77,12 @@ export const mainContentModule = (() => {
         const taskID = taskDiv.getAttribute("task-id");
         const projectTaskBelongsTo = taskDiv.getAttribute("project");
         Pubsub.publish("taskDeleted", [taskID, projectTaskBelongsTo]);
+    }
+    const makeTaskComplete = (e) => {
+        const taskDiv = e.target.parentNode;
+        const taskID = taskDiv.getAttribute("task-id");
+        const projectTaskBelongsTo = taskDiv.getAttribute("project");
+        Pubsub.publish("taskCompletionStatusChanged", [taskID, projectTaskBelongsTo]);
     }
     return {render};
 })();

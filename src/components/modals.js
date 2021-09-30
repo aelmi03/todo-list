@@ -1,4 +1,5 @@
 import { Pubsub } from "../application-logic/pubsub";
+import { Task } from "../application-logic/Classes";
 export const addProjectModal = (() => {
     console.log(Pubsub);
     const modal = document.querySelector(".add-project-modal");
@@ -26,7 +27,7 @@ export const addProjectModal = (() => {
 })();
 
 export const mainModal = (() => {
-    const createModal = (modalName) => {
+    const createModal = (modalName, secondButtonName) => {
         const mainDiv = document.createElement("div");
         mainDiv.classList.add("add-task-modal");
         const headerOfModal = document.createElement("h2");
@@ -51,7 +52,7 @@ export const mainModal = (() => {
         const buttonContainer = document.createElement("button");
         buttonContainer.classList.add("add-task-buttons");
         const closeButton = createButton("task-cancel", "Cancel");
-        const addButton = createButton("task-add", "Add Task");
+        const addButton = createButton("task-add",secondButtonName);
         closeButton.addEventListener("click", deleteModal);
         appendAllChildren(buttonContainer, [closeButton, addButton]);
         appendAllChildren(mainDiv, [headerOfModal, titleLabel, titleInput, descriptionLabel, descriptionInput, 
@@ -98,14 +99,25 @@ export const mainModal = (() => {
 
        
     }
-    return{createModal};
+    return{createModal, deleteModal};
 
 })();
 
 export const addTaskModal = (() => {
     const createAddModal = (project) => {
-        console.log(project.getProjectName());
-        mainModal.createModal("New Task");
+        mainModal.createModal("New Task", "Add Task");
+        const addTaskButton = document.querySelector(".task-add");
+        const titleInput = document.querySelector("#title");
+        const descriptionInput = document.querySelector("#description");
+        const dueDateInput = document.querySelector("#due-date");
+        const priorityInput = document.querySelector("#priority");
+        addTaskButton.addEventListener("click", function(e){
+            const newTask = Task(titleInput.value, descriptionInput.value, dueDateInput.value, priorityInput.value, 
+            false);
+            Pubsub.publish("newTaskAdded", [newTask, project]);
+            mainModal.deleteModal(e);
+        });
+    
     }
     Pubsub.subscribe("addTaskButtonClicked", createAddModal);
     return {createAddModal};

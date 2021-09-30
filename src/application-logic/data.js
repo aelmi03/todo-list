@@ -25,6 +25,17 @@ export const Data = (() => {
             }
         }
     }
+    const addNewTaskToData = (taskAndProjectInArray) => {
+       const newTask = taskAndProjectInArray[0];
+       newTask.setID(createUniqueID());
+       const project = taskAndProjectInArray[1];
+       project.addTask(newTask); 
+       Pubsub.publish("projectClickedOrUpdated", project);
+    }
+    const createUniqueID = () => {
+        return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
+    }
+    Pubsub.subscribe("newTaskAdded", addNewTaskToData);
     Pubsub.subscribe("projectDeleted", deleteProject);
     return {getProjects};
 })();

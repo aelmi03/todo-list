@@ -13,7 +13,7 @@ export const sideBarModule = (() => {
 
     const createProjectDiv = (project, projectListContainer) => {
        const mainDiv = document.createElement("div");
-       mainDiv.addEventListener("click", (e) => Pubsub.publish("projectClicked", project)); 
+       mainDiv.addEventListener("click", (e) => Pubsub.publish("projectClickedOrUpdated", project)); 
        mainDiv.classList.add("project");
        const projectTitle = document.createElement("p");
        projectTitle.textContent = project.getProjectName();

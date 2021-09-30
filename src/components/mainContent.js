@@ -15,6 +15,7 @@ export const mainContentModule = (() => {
         tasksContainerDiv.appendChild(headerTitle);
         if(project.getProjectName() !== "Today" && project.getProjectName() !== "Next Week"){
             tasksContainerDiv.appendChild(addTaskButton);
+            addTaskButton.addEventListener("click", (e) => Pubsub.publish("addTaskButtonClicked", project ));
         }
         tasksContainerDiv.appendChild(taskListContainer);
     }

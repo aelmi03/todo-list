@@ -123,5 +123,46 @@ export const addTaskModal = (() => {
     return {createAddModal};
 })();
 
+export const editTaskModal = (() => {
+    const createEditModal = (task) => {
+        mainModal.createModal("Edit Task", "Update Task");
+        populateEditModal(task);
+        const addTaskButton = document.querySelector(".task-add");
+        addTaskButton.addEventListener("click", function(e){
+            Pubsub.publish("taskUpdated", [task, getTitleInputValue(), getDescriptionInputValue(),getDueDateInputValue(),  getPriorityInputValue()]);
+            mainModal.deleteModal(e);
+        });
+    }
+    const populateEditModal = (task) => {
+        const titleInput = document.querySelector("#title");
+        titleInput.value = task.getTitle();
+        const descriptionInput = document.querySelector("#description");
+        descriptionInput.value = task.getDescription();
+        const dueDateInput = document.querySelector("#due-date");
+        dueDateInput.value = task.getDueDate();
+        const priorityInput = document.querySelector("#priority");
+        priorityInput.value = task.getPriority();
+    }
+    const getTitleInputValue = () => {
+        const titleInput = document.querySelector("#title");
+        return titleInput.value;
+    }
+    const getDescriptionInputValue = () => {
+        const descriptionInput = document.querySelector("#description");
+        return descriptionInput.value;
+    }
+    const getDueDateInputValue = () => {
+        const dueDateInput = document.querySelector("#due-date");
+        return dueDateInput.value;
+    }
+    const getPriorityInputValue = () => {
+        const priorityInput = document.querySelector("#priority");
+        return priorityInput.value;
+    }
+    Pubsub.subscribe("editTaskClicked", createEditModal);
+})();
+
+
+
 
 

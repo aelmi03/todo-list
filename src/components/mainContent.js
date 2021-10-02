@@ -52,6 +52,7 @@ export const mainContentModule = (() => {
         editSpan.classList.add("material-icons-outlined");
         editSpan.classList.add("edit-task-icon");
         editSpan.textContent = "edit";
+        editTask(editSpan, task);
         const deleteSpan = document.createElement("span");
         deleteSpan.classList.add("material-icons-outlined");
         deleteSpan.classList.add("delete-task-icon");
@@ -72,12 +73,18 @@ export const mainContentModule = (() => {
             span.style.color = "green";
         }
     }
+    const editTask = (editSpan, task) => {
+        editSpan.addEventListener("click", function(){
+            Pubsub.publish("editTaskClicked", task);
+        })
+    } 
     const deleteTask = (e) => {
         const taskDiv = e.target.parentNode.parentNode;
         const taskID = taskDiv.getAttribute("task-id");
         const projectTaskBelongsTo = taskDiv.getAttribute("project");
         Pubsub.publish("taskDeleted", [taskID, projectTaskBelongsTo]);
     }
+
     const makeTaskComplete = (e) => {
         const taskDiv = e.target.parentNode;
         const taskID = taskDiv.getAttribute("task-id");

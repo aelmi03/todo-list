@@ -48,9 +48,24 @@ export const Data = (() => {
         Pubsub.publish("projectClickedOrUpdated", project);
         
     }
+
+    const updateTask = (taskAndUpdatedData) => {
+        const task = taskAndUpdatedData[0];
+        const title = taskAndUpdatedData[1];
+        const description = taskAndUpdatedData[2];
+        const dueDate = taskAndUpdatedData[3];
+        const priority = taskAndUpdatedData[4]; 
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setDueDate(dueDate);
+        task.setPriority(priority);
+        Pubsub.publish("projectClickedOrUpdated", task.getProject());
+
+    }
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
     }
+    Pubsub.subscribe("taskUpdated", updateTask);
     Pubsub.subscribe("taskCompletionStatusChanged", changeTaskCompletionStatus);
     Pubsub.subscribe("newTaskAdded", addNewTaskToData);
     Pubsub.subscribe("projectDeleted", deleteProject);

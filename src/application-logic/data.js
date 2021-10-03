@@ -1,5 +1,6 @@
 import {Pubsub} from './pubsub';
 import {Project, Task} from './Classes';
+import { sideBarModule } from '../components/sidebar';
 export const Data = (() => {
     const projectArray = [];
     const addProject = (projectName) => {
@@ -31,13 +32,13 @@ export const Data = (() => {
        const project = taskAndProjectInArray[1];
        newTask.setProject(project);
        project.addTask(newTask); 
-       Pubsub.publish("projectClickedOrUpdated", project);
+       Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const deleteTaskFromData = (taskIDAndProject) => {
         const taskID = taskIDAndProject[0];
         const project = getProject(taskIDAndProject[1]);
         project.deleteTaskByID(taskID);
-        Pubsub.publish("projectClickedOrUpdated", project);
+        Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const changeTaskCompletionStatus = (taskIDAndProject) => {
         const taskID = taskIDAndProject[0];
@@ -45,7 +46,7 @@ export const Data = (() => {
         const task = project.findTaskByID(taskID);
         const currentCompletionStatus = task.getCompletionStatus();
         task.setCompletionStatus((currentCompletionStatus === false) ? true : false);
-        Pubsub.publish("projectClickedOrUpdated", project);
+        Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
         
     }
 
@@ -59,8 +60,7 @@ export const Data = (() => {
         task.setDescription(description);
         task.setDueDate(dueDate);
         task.setPriority(priority);
-        Pubsub.publish("projectClickedOrUpdated", task.getProject());
-
+        Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));

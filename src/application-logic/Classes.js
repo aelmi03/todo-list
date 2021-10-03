@@ -83,8 +83,8 @@ export const Project = (title) => {
     }
     const findTaskByID = (id) => {
        return tasks.filter(task => task.getID() == id)[0];
-        
     }
+    
     const addTask = (task) => {
        tasks.push(task);
     }

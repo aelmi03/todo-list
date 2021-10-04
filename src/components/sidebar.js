@@ -62,10 +62,10 @@ const inboxProject = (() => {
     }
     inbox.addEventListener("click", displayInbox);
     const makeInboxProject = (e) => {
-        sideBarModule.makeActiveProject(e);
         if((Data.getProject("Inbox") === undefined)){
             Data.addProject("Inbox");
         }
+        sideBarModule.makeActiveProject(e);
         const inbox = Data.getProject("Inbox");
         const inboxSpecificTasks = Data.getAllTasksForAProject("Inbox");
         const tasksNotSpecificToInbox = Data.allTasksNotBelongingToAProject("Inbox");
@@ -73,6 +73,29 @@ const inboxProject = (() => {
         tasksNotSpecificToInbox.forEach(task => console.log(task.toString()));
         inbox.removeAllTasks();  
         [...inboxSpecificTasks, ...tasksNotSpecificToInbox].forEach(task => inbox.addTask(task));
+        console.log("TASKS DUE TODAY");
+        Data.getTasksDueToday().forEach(task => console.log(task.toString()));
         return inbox;
+    }
+    const initializeInbox = () => {
+       
+    }
+})();
+
+const todayProject = (() => {
+    const todayProjectDiv = document.querySelector(`div[project-name = "Today"]`);
+    const displayToday = (e) => {
+        Pubsub.publish("projectClickedOrUpdated", makeTodayProject(e));
+    }
+    todayProjectDiv.addEventListener("click", displayToday);
+    const makeTodayProject = (e) => {
+        sideBarModule.makeActiveProject(e);
+        const today = Data.getProject("Today");
+        const todayTasks = Data.getProjectsDueToday();
+    }
+    const initializeToday = () => {
+        if((Data.getProject("Today") === undefined)){
+            Data.addProject("Today");
+        }
     }
 })();

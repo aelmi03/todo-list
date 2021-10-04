@@ -1,6 +1,7 @@
 import {Pubsub} from './pubsub';
 import {Project, Task} from './Classes';
 import { sideBarModule } from '../components/sidebar';
+import {format, isToday,parseISO} from '../../node_modules/date-fns';
 export const Data = (() => {
     const projectArray = [];
     const addProject = (projectName) => {
@@ -31,17 +32,21 @@ export const Data = (() => {
        const newTask = taskAndProjectInArray[0];
        newTask.setID(createUniqueID());
        const project = taskAndProjectInArray[1];
+       formatDate(newTask);
        newTask.setProject(project);
        project.addTask(newTask); 
        Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
+    }
+    const formatDate = (newTask) => {
+        const date = new Date(newTask.getDueDate());
+        const realDateRegardlessOfTimezone = new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000);
+        newTask.setDueDate(format(realDateRegardlessOfTimezone, 'yyyy-MM-dd'));
     }
     const deleteTaskFromData = (taskIDAndProject) => {
         const taskID = taskIDAndProject[0];
         const project = getProject(taskIDAndProject[1]);
         project.deleteTaskByID(taskID);
-        if(sideBarModule.currentSelectedProject() === "Inbox" || taskIDAndProject[1] != "Inbox"){
-            removeFromInbox(taskID);
-        }
+        checkIfTaskDoesNotBelongToSpecialProject("Inbox", taskID, taskIDAndProject[1]);
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const changeTaskCompletionStatus = (taskIDAndProject) => {
@@ -53,8 +58,13 @@ export const Data = (() => {
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
         
     }
-    const removeFromInbox = (taskID) => {
-        const inboxProject = getProject("Inbox");
+    const checkIfTaskDoesNotBelongToSpecialProject = (projectName, taskID, projectTaskBelongsTo) => {
+        if(sideBarModule.currentSelectedProject() === projectName && projectTaskBelongsTo != projectName){
+            removeFromSpecialProject(projectName,taskID);
+        }
+    }
+    const removeFromSpecialProject = (projectName, taskID) => {
+        const inboxProject = getProject(projectName);
         inboxProject.deleteTaskByID(taskID);
     }
     const allTasksNotBelongingToAProject = (projectName) => {
@@ -83,6 +93,15 @@ export const Data = (() => {
         const tasksBelongToAProject = allTasks.filter(task => task.getProject().getProjectName() === projectName);
         return tasksBelongToAProject;
     }
+
+    const getTasksDueToday = () => {
+        const allTasks = Array.from(getAllTasks());
+        const tasksDueToday = allTasks.filter(task => {
+           return isToday(parseISO(task.getDueDate()));
+        });
+        return tasksDueToday;
+
+    }
     const updateTask = (taskAndUpdatedData) => {
         const task = taskAndUpdatedData[0];
         const title = taskAndUpdatedData[1];
@@ -103,5 +122,5 @@ export const Data = (() => {
     Pubsub.subscribe("newTaskAdded", addNewTaskToData);
     Pubsub.subscribe("projectDeleted", deleteProject);
     Pubsub.subscribe("taskDeleted", deleteTaskFromData);
-    return {getProjects, getProject, getAllTasks, addProject, getAllTasksForAProject, allTasksNotBelongingToAProject};
+    return {getProjects, getProject, getAllTasks, addProject, getAllTasksForAProject, allTasksNotBelongingToAProject, getTasksDueToday};
 })();

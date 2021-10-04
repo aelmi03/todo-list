@@ -25,6 +25,7 @@ export const Data = (() => {
                return projectArray[i];
             }
         }
+        return undefined;
     }
     const addNewTaskToData = (taskAndProjectInArray) => {
        const newTask = taskAndProjectInArray[0];
@@ -38,6 +39,9 @@ export const Data = (() => {
         const taskID = taskIDAndProject[0];
         const project = getProject(taskIDAndProject[1]);
         project.deleteTaskByID(taskID);
+        if(sideBarModule.currentSelectedProject() === "Inbox" || taskIDAndProject[1] != "Inbox"){
+            removeFromInbox(taskID);
+        }
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const changeTaskCompletionStatus = (taskIDAndProject) => {
@@ -49,7 +53,36 @@ export const Data = (() => {
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
         
     }
-
+    const removeFromInbox = (taskID) => {
+        const inboxProject = getProject("Inbox");
+        inboxProject.deleteTaskByID(taskID);
+    }
+    const allTasksNotBelongingToAProject = (projectName) => {
+        const allTasks = Array.from(getAllTasks());
+        allTasks.forEach(task => console.log(task.toString()));
+        const tasksNotBelongingToProject = allTasks.filter(task => {
+            if(task.hasBeenDeleted() === true){
+                return false;
+            }
+            else if(task.getProject().getProjectName() !== projectName){
+                return true;
+            }
+        });
+        return tasksNotBelongingToProject;
+    }
+    
+    const getAllTasks = () => {
+        let tasks = new Set();
+        projectArray.forEach(project => {
+           project.getAllTasks().forEach(task => tasks.add(task));
+        });
+        return tasks;
+    }
+    const getAllTasksForAProject = (projectName) => {
+        const allTasks = Array.from(getAllTasks());
+        const tasksBelongToAProject = allTasks.filter(task => task.getProject().getProjectName() === projectName);
+        return tasksBelongToAProject;
+    }
     const updateTask = (taskAndUpdatedData) => {
         const task = taskAndUpdatedData[0];
         const title = taskAndUpdatedData[1];
@@ -70,5 +103,5 @@ export const Data = (() => {
     Pubsub.subscribe("newTaskAdded", addNewTaskToData);
     Pubsub.subscribe("projectDeleted", deleteProject);
     Pubsub.subscribe("taskDeleted", deleteTaskFromData);
-    return {getProjects};
+    return {getProjects, getProject, getAllTasks, addProject, getAllTasksForAProject, allTasksNotBelongingToAProject};
 })();

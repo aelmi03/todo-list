@@ -5,6 +5,7 @@ export const Task = (taskTitle, taskDescription, taskDueDate, taskPriority, isCo
     let priority = taskPriority;
     let status = isCompleted;
     let ID = taskID;
+    let deletionStatus = false;
     let project = null;
 
     const getTitle = () => {
@@ -63,10 +64,17 @@ export const Task = (taskTitle, taskDescription, taskDueDate, taskPriority, isCo
          date : ${dueDate}, priority : ${priority}, ID : ${ID}`;
     }
 
+    const hasBeenDeleted = () => {
+        return deletionStatus;
+    }
+
+    const setTaskToBeDeleted = (bool) => {
+        deletionStatus = bool;
+    }
     
 
     return { getTitle, setTitle, getDescription, setDescription, getDueDate, setDueDate, getPriority, setPriority, 
-        getCompletionStatus, setCompletionStatus, getID, setID, getProject , setProject, toString };
+        getCompletionStatus, setCompletionStatus, getID, setID, getProject , setProject, toString, hasBeenDeleted, setTaskToBeDeleted };
 }
 
 export const Project = (title) => {
@@ -88,7 +96,9 @@ export const Project = (title) => {
     const addTask = (task) => {
        tasks.push(task);
     }
-
+    const removeAllTasks = () => {
+       tasks.length = 0;
+    }
     const updateTaskByID = (id, newTask) => {
        const updatedTask = findTaskByID(id);
        Object.assign(updatedTask, newTask);
@@ -99,9 +109,10 @@ export const Project = (title) => {
         if(!task) return;
         const position = tasks.indexOf(task);
         const newArray = tasks.splice(position,1);
-        tasks.slice(0).push(...newArray);
+        task.setTaskToBeDeleted(true);
+        tasks.slice(0, tasks.length).push(...newArray);
     }
 
-    return { getAllTasks, getProjectName, setProjectName, findTaskByID, addTask,updateTaskByID,deleteTaskByID };
+    return { getAllTasks, getProjectName, setProjectName, findTaskByID, addTask,updateTaskByID,deleteTaskByID, removeAllTasks };
 
 }

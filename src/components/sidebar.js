@@ -13,6 +13,7 @@ export const sideBarModule = (() => {
     }
 
     const createProjectDiv = (project, projectListContainer) => {
+       if(project.getProjectName() == "Inbox") return;
        const mainDiv = document.createElement("div");
        mainDiv.addEventListener("click", (e) => Pubsub.publish("projectClickedOrUpdated", project)); 
        mainDiv.classList.add("project");
@@ -30,7 +31,7 @@ export const sideBarModule = (() => {
     }
     const makeActiveProject = (e) => {
         let mainDiv = e.target;
-        if(mainDiv.nodeName.toLowerCase() == "p"){
+        if(mainDiv.nodeName.toLowerCase() == "p" || mainDiv.nodeName.toLowerCase() == "span"){
             mainDiv = mainDiv.parentNode;
         }
         makeAllProjectNotActive();
@@ -50,5 +51,28 @@ export const sideBarModule = (() => {
         return currentProject.getAttribute("project-name");
     }
     Pubsub.subscribe("projectUpdated", render);
-    return {currentSelectedProject};
+    return {currentSelectedProject, makeActiveProject};
+})();
+
+const inboxProject = (() => {
+    const inbox = document.querySelector(`div[project-name = "Inbox"]`);
+
+    const displayInbox = (e) => {
+        Pubsub.publish("projectClickedOrUpdated", makeInboxProject(e));
+    }
+    inbox.addEventListener("click", displayInbox);
+    const makeInboxProject = (e) => {
+        sideBarModule.makeActiveProject(e);
+        if((Data.getProject("Inbox") === undefined)){
+            Data.addProject("Inbox");
+        }
+        const inbox = Data.getProject("Inbox");
+        const inboxSpecificTasks = Data.getAllTasksForAProject("Inbox");
+        const tasksNotSpecificToInbox = Data.allTasksNotBelongingToAProject("Inbox");
+        console.log("TASKS NOT SPECIFIC");
+        tasksNotSpecificToInbox.forEach(task => console.log(task.toString()));
+        inbox.removeAllTasks();  
+        [...inboxSpecificTasks, ...tasksNotSpecificToInbox].forEach(task => inbox.addTask(task));
+        return inbox;
+    }
 })();

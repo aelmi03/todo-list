@@ -119,6 +119,7 @@ export const Data = (() => {
         task.setTitle(title);
         task.setDescription(description);
         task.setDueDate(dueDate);
+        formatDate(task);
         task.setPriority(priority);
         if(sideBarModule.currentSelectedProject() == "Today"){
             updateTodayTasks();

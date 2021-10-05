@@ -13,7 +13,7 @@ export const sideBarModule = (() => {
     }
 
     const createProjectDiv = (project, projectListContainer) => {
-       if(project.getProjectName() == "Inbox" || project.getProjectName() == "Today" || project.getProjectName() == "Next Week") return;
+       if(project.getProjectName() == "Inbox" || project.getProjectName() == "Today" || project.getProjectName() == "This Week") return;
        const mainDiv = document.createElement("div");
        mainDiv.addEventListener("click", (e) => Pubsub.publish("projectClickedOrUpdated", project)); 
        mainDiv.classList.add("project");
@@ -92,6 +92,25 @@ const todayProject = (() => {
         today.removeAllTasks();
         todayTasks.forEach(task => today.addTask(task));
         return today;
+    }
+    
+})();
+const thisWeek = (() => {
+    const thisWeekDiv = document.querySelector(`div[project-name = "This Week"]`);
+    const displayNextWeek = (e) => {
+        Pubsub.publish("projectClickedOrUpdated", makeNextWeek(e));
+    }
+    thisWeekDiv.addEventListener("click", displayNextWeek);
+    const makeNextWeek = (e) => {
+        initializeProject("This Week");
+        sideBarModule.makeActiveProject(e);
+        const thisWeek = Data.getProject("This Week");
+        const thisWeekTasks = Data.getTasksDueThisWeek();
+        console.log("this week tasks");
+        console.log(thisWeekTasks);
+        thisWeek.removeAllTasks();
+        thisWeekTasks.forEach(task => thisWeek.addTask(task));
+        return thisWeek;
     }
     
 })();

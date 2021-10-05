@@ -1,7 +1,7 @@
 import {Pubsub} from './pubsub';
 import {Project, Task} from './Classes';
 import { sideBarModule } from '../components/sidebar';
-import {format, isToday,parseISO} from '../../node_modules/date-fns';
+import {format, isToday,parseISO, isThisWeek} from '../../node_modules/date-fns';
 export const Data = (() => {
     const projectArray = [];
     const addProject = (projectName) => {
@@ -103,6 +103,13 @@ export const Data = (() => {
         return tasksDueToday;
 
     }
+    const getTasksDueThisWeek = () => {
+        const allTasks = Array.from(getAllTasks());
+        const tasksDueThisWeek = allTasks.filter(task => {
+            return isThisWeek(parseISO(task.getDueDate(),{ weekStartsOn: 1}))
+        });
+        return tasksDueThisWeek;
+    }
     const updateTask = (taskAndUpdatedData) => {
         const task = taskAndUpdatedData[0];
         const title = taskAndUpdatedData[1];
@@ -116,6 +123,9 @@ export const Data = (() => {
         if(sideBarModule.currentSelectedProject() == "Today"){
             updateTodayTasks();
         }
+        if(sideBarModule.currentSelectedProject() == "This Week"){
+            updateThisWeekTasks();
+        }
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const updateTodayTasks = () => {
@@ -123,6 +133,12 @@ export const Data = (() => {
         todayProject.removeAllTasks();
         getTasksDueToday().forEach(task => {todayProject.addTask(task)});
     }
+    const updateThisWeekTasks = () => {
+        const thisWeekProject = getProject("This Week");
+        thisWeekProject.removeAllTasks();
+        getTasksDueThisWeek().forEach(task => {thisWeekProject.addTask(task)});
+    }
+    
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
     }
@@ -131,5 +147,5 @@ export const Data = (() => {
     Pubsub.subscribe("newTaskAdded", addNewTaskToData);
     Pubsub.subscribe("projectDeleted", deleteProject);
     Pubsub.subscribe("taskDeleted", deleteTaskFromData);
-    return {getProjects, getProject, getAllTasks, addProject, getAllTasksForAProject, allTasksNotBelongingToAProject, getTasksDueToday};
+    return {getProjects, getProject, getAllTasks, addProject, getAllTasksForAProject, allTasksNotBelongingToAProject, getTasksDueToday, getTasksDueThisWeek};
 })();

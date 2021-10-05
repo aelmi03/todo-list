@@ -13,7 +13,7 @@ export const sideBarModule = (() => {
     }
 
     const createProjectDiv = (project, projectListContainer) => {
-       if(project.getProjectName() == "Inbox") return;
+       if(project.getProjectName() == "Inbox" || project.getProjectName() == "Today" || project.getProjectName() == "Next Week") return;
        const mainDiv = document.createElement("div");
        mainDiv.addEventListener("click", (e) => Pubsub.publish("projectClickedOrUpdated", project)); 
        mainDiv.classList.add("project");
@@ -62,9 +62,7 @@ const inboxProject = (() => {
     }
     inbox.addEventListener("click", displayInbox);
     const makeInboxProject = (e) => {
-        if((Data.getProject("Inbox") === undefined)){
-            Data.addProject("Inbox");
-        }
+        initializeProject("Inbox");
         sideBarModule.makeActiveProject(e);
         const inbox = Data.getProject("Inbox");
         const inboxSpecificTasks = Data.getAllTasksForAProject("Inbox");
@@ -77,9 +75,7 @@ const inboxProject = (() => {
         Data.getTasksDueToday().forEach(task => console.log(task.toString()));
         return inbox;
     }
-    const initializeInbox = () => {
-       
-    }
+    
 })();
 
 const todayProject = (() => {
@@ -89,13 +85,19 @@ const todayProject = (() => {
     }
     todayProjectDiv.addEventListener("click", displayToday);
     const makeTodayProject = (e) => {
+        initializeProject("Today");
         sideBarModule.makeActiveProject(e);
         const today = Data.getProject("Today");
-        const todayTasks = Data.getProjectsDueToday();
+        const todayTasks = Data.getTasksDueToday();
+        today.removeAllTasks();
+        todayTasks.forEach(task => today.addTask(task));
+        return today;
     }
-    const initializeToday = () => {
-        if((Data.getProject("Today") === undefined)){
-            Data.addProject("Today");
-        }
-    }
+    
 })();
+
+const initializeProject = (projectName) => {
+    if((Data.getProject(projectName) === undefined)){
+        Data.addProject(projectName);
+    }
+}

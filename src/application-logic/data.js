@@ -47,6 +47,7 @@ export const Data = (() => {
         const project = getProject(taskIDAndProject[1]);
         project.deleteTaskByID(taskID);
         checkIfTaskDoesNotBelongToSpecialProject("Inbox", taskID, taskIDAndProject[1]);
+        checkIfTaskDoesNotBelongToSpecialProject("Today", taskID, taskIDAndProject[1]);
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const changeTaskCompletionStatus = (taskIDAndProject) => {
@@ -112,7 +113,15 @@ export const Data = (() => {
         task.setDescription(description);
         task.setDueDate(dueDate);
         task.setPriority(priority);
+        if(sideBarModule.currentSelectedProject() == "Today"){
+            updateTodayTasks();
+        }
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
+    }
+    const updateTodayTasks = () => {
+        const todayProject = getProject("Today");
+        todayProject.removeAllTasks();
+        getTasksDueToday().forEach(task => {todayProject.addTask(task)});
     }
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));

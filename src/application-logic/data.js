@@ -5,15 +5,35 @@ import {format, isToday,parseISO, isThisWeek} from '../../node_modules/date-fns'
 export const Data = (() => {
     
     const getDataFromLocalStorage = () => {
-        const projects  = JSON.parse(localStorage.getItem("ProjectsArray")) || [];
-        console.log("PROJECTS HEHE");
-        console.log(projects.length);
-        projects.forEach(project => console.log(project.getProjectName()));
+        const projectTemplate  = JSON.parse(localStorage.getItem("Projects")) || [];
+        console.log("PROJECTS TEMPLATE");
+        console.log(projectTemplate);
+        const projects = [];
+        projectTemplate.forEach(projectObject => {
+            const retrievingProject = Project(projectObject.projectName);
+            const projectTasks = projectObject.tasks;
+            projectTasks.forEach(taskTemplate => {
+                console.log("GETTING INFO ON INBOX");
+                console.log(taskTemplate.taskProject);
+                console.log(projectObject.projectName);
+                if(taskTemplate.taskProject !== projectObject.projectName){
+                    return;
+                }
+                console.log("TASK TEMPLATE");
+                console.log(taskTemplate);
+                console.log(taskTemplate.taskTitle);
+                const newTask = Task(taskTemplate.taskTitle, taskTemplate.taskDescription, taskTemplate.taskDueDate, taskTemplate.taskPriority,
+                    taskTemplate.taskCompletionStatus, taskTemplate.taskID );
+                newTask.setProject(retrievingProject);
+                retrievingProject.addTask(newTask);
+            });
+            projects.push(retrievingProject);
+        })
         Pubsub.publish("pageLoaded", projects);
         return projects;
     }
     
-    const projectArray = [];
+    const projectArray = getDataFromLocalStorage();
     const addProject = (projectName) => {
         const newProject = Project(projectName);
         projectArray.push(newProject);
@@ -48,7 +68,6 @@ export const Data = (() => {
        newTask.setProject(project);
        project.addTask(newTask); 
        saveData();
-
        Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const formatDate = (newTask) => {
@@ -164,25 +183,26 @@ export const Data = (() => {
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
     }
+
     const saveData = () => {
        const newData = projectArray.map(project => {
            const newObject = {};
            newObject.projectName = project.getProjectName();
-           newObject.tasks = [project.getAllTasks().map(task => {
+           newObject.tasks = project.getAllTasks().map(task => {
                return {
                    taskTitle : task.getTitle(),
                    taskDescription : task.getDescription(),
                    taskDueDate : task.getDueDate(),
                    taskPriority : task.getPriority(),
-                   taskCompletionSTatus : task.getCompletionStatus(),
+                   taskCompletionStatus : task.getCompletionStatus(),
                    taskID : task.getID(),
-                   taskProject : project.getProjectName()
+                   taskProject : task.getProject().getProjectName()
                 }
-           })]
+           })
            return newObject;
        });
-       console.log("---MANIPULATED DATA----");
-       console.log(newData);
+       localStorage.setItem("Projects", JSON.stringify(newData));
+       console.log("RETRIEVING THEM");       
     }
     
     Pubsub.subscribe("taskUpdated", updateTask);

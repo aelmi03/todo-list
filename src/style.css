@@ -148,7 +148,7 @@ li{
 .add-project-modal > h3{
     margin-top: 0;
 }
-.warning-text{
+.warning-text, .add-task-warning-text{
     color:red;
     font-size:0.8rem;
     font-weight: bold;

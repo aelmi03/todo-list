@@ -58,6 +58,8 @@ export const mainModal = (() => {
         const lowPriorityOption = createOptionElement("Low", "Low");
         const mediumPriorityOption = createOptionElement("Medium", "Medium");
         const highPriorityOption = createOptionElement("High", "High");
+        const warningText = document.createElement("p");
+        warningText.classList.add("add-task-warning-text");
         appendAllChildren(prioritySelecter, [lowPriorityOption,mediumPriorityOption,highPriorityOption]);
         const buttonContainer = document.createElement("button");
         buttonContainer.classList.add("add-task-buttons");
@@ -66,7 +68,7 @@ export const mainModal = (() => {
         closeButton.addEventListener("click", deleteModal);
         appendAllChildren(buttonContainer, [closeButton, addButton]);
         appendAllChildren(mainDiv, [headerOfModal, titleLabel, titleInput, descriptionLabel, descriptionInput, 
-                            dueDateLabel, dueDateInput, priorityLabel, prioritySelecter, buttonContainer]);
+                            dueDateLabel, dueDateInput, priorityLabel, prioritySelecter, warningText, buttonContainer]);
         document.body.appendChild(mainDiv);
     }
     const createInput = (type, id, nameAttribute) => {
@@ -109,7 +111,18 @@ export const mainModal = (() => {
 
        
     }
-    return{createModal, deleteModal};
+    const showWarningText = () => {
+        const warningText = document.querySelector(".add-task-warning-text");
+        warningText.textContent = "All fields must be filled out";
+    }
+    const checkAllValuesAreFilled = (title, description, dueDate, priorityInput) => {
+        if(title && description && dueDate && priorityInput){
+            return true;
+        }
+        return false;
+
+    }
+    return{createModal, deleteModal, checkAllValuesAreFilled, showWarningText};
 
 })();
 
@@ -122,6 +135,10 @@ export const addTaskModal = (() => {
         const dueDateInput = document.querySelector("#due-date");
         const priorityInput = document.querySelector("#priority");
         addTaskButton.addEventListener("click", function(e){
+            if(!(mainModal.checkAllValuesAreFilled(titleInput.value, descriptionInput.value, dueDateInput.value, priorityInput.value))){
+                mainModal.showWarningText();
+                return;
+            }
             const newTask = Task(titleInput.value, descriptionInput.value, dueDateInput.value, priorityInput.value, 
             false);
             Pubsub.publish("newTaskAdded", [newTask, project]);
@@ -139,6 +156,10 @@ export const editTaskModal = (() => {
         populateEditModal(task);
         const addTaskButton = document.querySelector(".task-add");
         addTaskButton.addEventListener("click", function(e){
+            if(!(mainModal.checkAllValuesAreFilled(getTitleInputValue(), getDescriptionInputValue(),getDueDateInputValue(),  getPriorityInputValue()))){
+                mainModal.showWarningText();
+                return;
+            }
             Pubsub.publish("taskUpdated", [task, getTitleInputValue(), getDescriptionInputValue(),getDueDateInputValue(),  getPriorityInputValue()]);
             mainModal.deleteModal(e);
         });

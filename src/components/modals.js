@@ -3,17 +3,28 @@ import { Task } from "../application-logic/Classes";
 import { Data } from "../application-logic/data";
 export const addProjectModal = (() => {
     console.log(Pubsub);
+    const mainContent = document.querySelector(".main-content");
+    console.log(mainContent);
     const modal = document.querySelector(".add-project-modal");
     const addProjectButton = document.querySelector(".add-project");
     const modalText = document.querySelector("#add-project-input");
     const warningText = document.querySelector(".warning-text");
     const showModal = () => {
-        (modal.style.opacity == "1") ? modal.style.opacity = "0" : modal.style.opacity = "1";
+        if(modal.style.opacity == "1"){
+            modal.style.opacity = "0";
+            mainContent.style.pointerEvents = "auto";
+        }
+        else if(modal.style.opacity = "0"){
+            modal.style.opacity = "1";
+            mainContent.style.pointerEvents = "none";
+        }
+
     }
     const closeModalButton = document.querySelector(".project-cancel");
     const closeModal = (e) => {
         modal.style.opacity = "0";
         modalText.value = "";
+        mainContent.style.pointerEvents = "auto";
         warningText.textContent = "";
     }
     const addNewProjectButton = document.querySelector(".project-add");
@@ -37,6 +48,7 @@ export const addProjectModal = (() => {
 })();
 
 export const mainModal = (() => {
+    const mainContent = document.querySelector(".main-content");
     const createModal = (modalName, secondButtonName) => {
         const mainDiv = document.createElement("div");
         mainDiv.classList.add("add-task-modal");
@@ -70,6 +82,7 @@ export const mainModal = (() => {
         appendAllChildren(mainDiv, [headerOfModal, titleLabel, titleInput, descriptionLabel, descriptionInput, 
                             dueDateLabel, dueDateInput, priorityLabel, prioritySelecter, warningText, buttonContainer]);
         document.body.appendChild(mainDiv);
+        mainContent.style.pointerEvents = "none";
     }
     const createInput = (type, id, nameAttribute) => {
         const input = document.createElement("input");
@@ -108,6 +121,7 @@ export const mainModal = (() => {
         setTimeout(function(){ 
             document.body.removeChild(e.target.parentNode.parentNode);
          }, 550);
+        mainContent.style.pointerEvents = "auto";
 
        
     }

@@ -3,11 +3,21 @@ import {Project, Task} from './Classes';
 import { sideBarModule } from '../components/sidebar';
 import {format, isToday,parseISO, isThisWeek} from '../../node_modules/date-fns';
 export const Data = (() => {
+    
+    const getDataFromLocalStorage = () => {
+        const projects  = JSON.parse(localStorage.getItem("ProjectsArray")) || [];
+        console.log("PROJECTS HEHE");
+        console.log(projects.length);
+        projects.forEach(project => console.log(project.getProjectName()));
+        Pubsub.publish("pageLoaded", projects);
+        return projects;
+    }
+    
     const projectArray = [];
     const addProject = (projectName) => {
         const newProject = Project(projectName);
         projectArray.push(newProject);
-        Pubsub.publish("projectUpdated", null);
+        Pubsub.publish("projectUpdated", projectArray);
     }
     Pubsub.subscribe("projectCreated", addProject);
     const getProjects = () => {
@@ -18,7 +28,7 @@ export const Data = (() => {
         const newProjectArray = projectArray.filter(project => project !== projectToBeDeleted);
         projectArray.splice(0,projectArray.length);
         projectArray.push(...newProjectArray);
-        Pubsub.publish("projectUpdated", null );
+        Pubsub.publish("projectUpdated", projectArray );
     }
     const getProject = (projectName) => {
         for(let i = 0; i < projectArray.length; i++){
@@ -48,6 +58,7 @@ export const Data = (() => {
         project.deleteTaskByID(taskID);
         checkIfTaskDoesNotBelongToSpecialProject("Inbox", taskID, taskIDAndProject[1]);
         checkIfTaskDoesNotBelongToSpecialProject("Today", taskID, taskIDAndProject[1]);
+        checkIfTaskDoesNotBelongToSpecialProject("This Week", taskID, taskIDAndProject[1]);
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const changeTaskCompletionStatus = (taskIDAndProject) => {
@@ -61,12 +72,14 @@ export const Data = (() => {
     }
     const checkIfTaskDoesNotBelongToSpecialProject = (projectName, taskID, projectTaskBelongsTo) => {
         if(sideBarModule.currentSelectedProject() === projectName && projectTaskBelongsTo != projectName){
+            console.log("REMOVING SPECIAL PROJECT HEHEH");
             removeFromSpecialProject(projectName,taskID);
         }
     }
     const removeFromSpecialProject = (projectName, taskID) => {
-        const inboxProject = getProject(projectName);
-        inboxProject.deleteTaskByID(taskID);
+        const specialProject = getProject(projectName);
+        console.log(taskID);
+        specialProject.deleteTaskByID(taskID);
     }
     const allTasksNotBelongingToAProject = (projectName) => {
         const allTasks = Array.from(getAllTasks());
@@ -85,6 +98,7 @@ export const Data = (() => {
     const getAllTasks = () => {
         let tasks = new Set();
         projectArray.forEach(project => {
+           if(project.getProjectName() == "Today" || project.getProjectName() =="This Week") return;
            project.getAllTasks().forEach(task => tasks.add(task));
         });
         return tasks;
@@ -127,6 +141,7 @@ export const Data = (() => {
         if(sideBarModule.currentSelectedProject() == "This Week"){
             updateThisWeekTasks();
         }
+        saveData();
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const updateTodayTasks = () => {
@@ -143,6 +158,22 @@ export const Data = (() => {
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
     }
+
+    const saveData = () => {
+        console.log("saving data");
+        console.log(projectArray);
+        localStorage.setItem("ProjectsArray", JSON.stringify(projectArray));
+        const savedProjects = JSON.parse(localStorage.getItem("ProjectsArray"));
+        console.log("PROVING I SAVED DATA");
+        console.log(savedProjects);
+        const testingArray = [{a:"Wassup", b:"hello"}];
+        console.log(testingArray);
+        localStorage.setItem("testingArray", JSON.stringify(testingArray));
+        const retrievedTesting = JSON.parse(localStorage.getItem("testingArray"));
+        console.log(retrievedTesting);
+
+    }
+    
     Pubsub.subscribe("taskUpdated", updateTask);
     Pubsub.subscribe("taskCompletionStatusChanged", changeTaskCompletionStatus);
     Pubsub.subscribe("newTaskAdded", addNewTaskToData);

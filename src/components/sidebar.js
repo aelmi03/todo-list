@@ -3,11 +3,10 @@ import {Data} from './../application-logic/data';
 
 
 export const sideBarModule = (() => {
-    const render =  () => {
+    const render =  (arrayOfProjects) => {
         console.log("HEYY");
         const projectListContainer = document.querySelector(".project-list");
         projectListContainer.textContent = "";
-        const arrayOfProjects = Data.getProjects();
         console.log(arrayOfProjects);
         arrayOfProjects.forEach(project => createProjectDiv(project, projectListContainer));
     }
@@ -50,8 +49,9 @@ export const sideBarModule = (() => {
         const currentProject = document.querySelector(".active-project");
         return currentProject.getAttribute("project-name");
     }
+    Pubsub.subscribe("pageLoaded", render);
     Pubsub.subscribe("projectUpdated", render);
-    return {currentSelectedProject, makeActiveProject};
+    return {currentSelectedProject, makeActiveProject, render};
 })();
 
 const inboxProject = (() => {

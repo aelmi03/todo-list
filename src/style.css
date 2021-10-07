@@ -148,6 +148,12 @@ li{
 .add-project-modal > h3{
     margin-top: 0;
 }
+.warning-text{
+    color:red;
+    font-size:0.8rem;
+    font-weight: bold;
+}
+
 .project-cancel, .task-cancel{
     background-color: rgb(255, 0, 0);
     color:white;

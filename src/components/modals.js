@@ -1,10 +1,12 @@
 import { Pubsub } from "../application-logic/pubsub";
 import { Task } from "../application-logic/Classes";
+import { Data } from "../application-logic/data";
 export const addProjectModal = (() => {
     console.log(Pubsub);
     const modal = document.querySelector(".add-project-modal");
     const addProjectButton = document.querySelector(".add-project");
     const modalText = document.querySelector("#add-project-input");
+    const warningText = document.querySelector(".warning-text");
     const showModal = () => {
         (modal.style.opacity == "1") ? modal.style.opacity = "0" : modal.style.opacity = "1";
     }
@@ -12,11 +14,19 @@ export const addProjectModal = (() => {
     const closeModal = (e) => {
         modal.style.opacity = "0";
         modalText.value = "";
+        warningText.textContent = "";
     }
     const addNewProjectButton = document.querySelector(".project-add");
     console.log(addNewProjectButton);
     const addNewProject = (e) => {
-        if(!(modalText.value)) return;
+        if(!(modalText.value)){
+            warningText.textContent = "Project name field cannot be empty";
+            return;
+        };
+        if(Data.getProject(modalText.value) !== undefined){
+            warningText.textContent = "Projects are not allowed to have the same name";
+            return;
+        }
         Pubsub.publish("projectCreated", modalText.value);
         closeModal();
     }

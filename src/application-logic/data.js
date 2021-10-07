@@ -17,6 +17,7 @@ export const Data = (() => {
     const addProject = (projectName) => {
         const newProject = Project(projectName);
         projectArray.push(newProject);
+        saveData();
         Pubsub.publish("projectUpdated", projectArray);
     }
     Pubsub.subscribe("projectCreated", addProject);
@@ -28,6 +29,7 @@ export const Data = (() => {
         const newProjectArray = projectArray.filter(project => project !== projectToBeDeleted);
         projectArray.splice(0,projectArray.length);
         projectArray.push(...newProjectArray);
+        saveData();
         Pubsub.publish("projectUpdated", projectArray );
     }
     const getProject = (projectName) => {
@@ -45,6 +47,8 @@ export const Data = (() => {
        formatDate(newTask);
        newTask.setProject(project);
        project.addTask(newTask); 
+       saveData();
+
        Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const formatDate = (newTask) => {
@@ -59,6 +63,7 @@ export const Data = (() => {
         checkIfTaskDoesNotBelongToSpecialProject("Inbox", taskID, taskIDAndProject[1]);
         checkIfTaskDoesNotBelongToSpecialProject("Today", taskID, taskIDAndProject[1]);
         checkIfTaskDoesNotBelongToSpecialProject("This Week", taskID, taskIDAndProject[1]);
+        saveData();
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
     }
     const changeTaskCompletionStatus = (taskIDAndProject) => {
@@ -67,6 +72,7 @@ export const Data = (() => {
         const task = project.findTaskByID(taskID);
         const currentCompletionStatus = task.getCompletionStatus();
         task.setCompletionStatus((currentCompletionStatus === false) ? true : false);
+        saveData();
         Pubsub.publish("projectClickedOrUpdated", getProject(sideBarModule.currentSelectedProject()));
         
     }
@@ -158,20 +164,25 @@ export const Data = (() => {
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
     }
-
     const saveData = () => {
-        console.log("saving data");
-        console.log(projectArray);
-        localStorage.setItem("ProjectsArray", JSON.stringify(projectArray));
-        const savedProjects = JSON.parse(localStorage.getItem("ProjectsArray"));
-        console.log("PROVING I SAVED DATA");
-        console.log(savedProjects);
-        const testingArray = [{a:"Wassup", b:"hello"}];
-        console.log(testingArray);
-        localStorage.setItem("testingArray", JSON.stringify(testingArray));
-        const retrievedTesting = JSON.parse(localStorage.getItem("testingArray"));
-        console.log(retrievedTesting);
-
+       const newData = projectArray.map(project => {
+           const newObject = {};
+           newObject.projectName = project.getProjectName();
+           newObject.tasks = [project.getAllTasks().map(task => {
+               return {
+                   taskTitle : task.getTitle(),
+                   taskDescription : task.getDescription(),
+                   taskDueDate : task.getDueDate(),
+                   taskPriority : task.getPriority(),
+                   taskCompletionSTatus : task.getCompletionStatus(),
+                   taskID : task.getID(),
+                   taskProject : project.getProjectName()
+                }
+           })]
+           return newObject;
+       });
+       console.log("---MANIPULATED DATA----");
+       console.log(newData);
     }
     
     Pubsub.subscribe("taskUpdated", updateTask);

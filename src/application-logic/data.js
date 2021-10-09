@@ -51,6 +51,7 @@ export const Data = (() => {
         projectArray.push(...newProjectArray);
         saveData();
         Pubsub.publish("projectUpdated", projectArray );
+        Pubsub.publish("clearTaskList", null);
     }
     const getProject = (projectName) => {
         for(let i = 0; i < projectArray.length; i++){

@@ -20,6 +20,10 @@ export const mainContentModule = (() => {
         tasksContainerDiv.appendChild(taskListContainer);
     }
     Pubsub.subscribe("projectClickedOrUpdated", render);
+    const clearTaskList = () => {
+        tasksContainerDiv.textContent = "";
+    }
+    Pubsub.subscribe("clearTaskList", clearTaskList);
     const createTaskDiv = (task, container) => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task");

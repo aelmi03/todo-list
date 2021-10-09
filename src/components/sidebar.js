@@ -23,7 +23,11 @@ export const sideBarModule = (() => {
        const deleteButton = document.createElement("span");
        deleteButton.classList.add("material-icons-outlined");
        deleteButton.textContent = "close";
-       deleteButton.addEventListener("click", (e) => Pubsub.publish("projectDeleted", project.getProjectName()));
+       deleteButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        Pubsub.publish("projectDeleted", project.getProjectName());
+       });
+       
        mainDiv.appendChild(projectTitle);
        mainDiv.appendChild(deleteButton);
        projectListContainer.appendChild(mainDiv);
@@ -56,7 +60,6 @@ export const sideBarModule = (() => {
 
 const inboxProject = (() => {
     const inbox = document.querySelector(`div[project-name = "Inbox"]`);
-
     const displayInbox = (e) => {
         Pubsub.publish("projectClickedOrUpdated", makeInboxProject(e));
     }
@@ -75,7 +78,7 @@ const inboxProject = (() => {
         Data.getTasksDueToday().forEach(task => console.log(task.toString()));
         return inbox;
     }
-    
+
 })();
 
 const todayProject = (() => {

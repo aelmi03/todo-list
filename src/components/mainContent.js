@@ -97,5 +97,7 @@ export const mainContentModule = (() => {
         const projectTaskBelongsTo = taskDiv.getAttribute("project");
         Pubsub.publish("taskCompletionStatusChanged", [taskID, projectTaskBelongsTo]);
     }
+    Pubsub.publish("pageHasBeenLoaded");
     return {render};
 })();
+

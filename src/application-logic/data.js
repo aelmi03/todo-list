@@ -184,7 +184,7 @@ export const Data = (() => {
     const createUniqueID = () => {
         return Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
     }
-
+    //converting my factory functions with methods to objects with no methods and just the properties because local storage can't save functions
     const saveData = () => {
        const newData = projectArray.map(project => {
            const newObject = {};
@@ -213,3 +213,4 @@ export const Data = (() => {
     Pubsub.subscribe("taskDeleted", deleteTaskFromData);
     return {getProjects, getProject, getAllTasks, addProject, getAllTasksForAProject, allTasksNotBelongingToAProject, getTasksDueToday, getTasksDueThisWeek};
 })();
+Pubsub.publish("pageHasBeenLoaded");

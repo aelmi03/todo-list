@@ -53,6 +53,7 @@ export const sideBarModule = (() => {
         const currentProject = document.querySelector(".active-project");
         return currentProject.getAttribute("project-name");
     }
+    
     Pubsub.subscribe("pageLoaded", render);
     Pubsub.subscribe("projectUpdated", render);
     return {currentSelectedProject, makeActiveProject, render};
@@ -86,6 +87,8 @@ const todayProject = (() => {
     const todayProjectDiv = document.querySelector(`div[project-name = "Today"]`);
     const displayToday = (e) => {
         Pubsub.publish("projectClickedOrUpdated", makeTodayProject(e));
+        console.log("TODAY HAS BEEN CLICKED");
+
     }
     todayProjectDiv.addEventListener("click", displayToday);
     const makeTodayProject = (e) => {
@@ -101,8 +104,8 @@ const todayProject = (() => {
         console.log("CLICKING TODAY");
         todayProjectDiv.click();
     }
-    Pubsub.subscribe("taskListContentEmptied", simulateClickOnTodayProject);
-    
+    Pubsub.subscribe("taskListContentEmptied", simulateClickOnTodayProject);  
+    Pubsub.subscribe("pageHasBeenLoaded", simulateClickOnTodayProject);  
 })();
 const thisWeek = (() => {
     const thisWeekDiv = document.querySelector(`div[project-name = "This Week"]`);

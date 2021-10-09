@@ -22,6 +22,8 @@ export const mainContentModule = (() => {
     Pubsub.subscribe("projectClickedOrUpdated", render);
     const clearTaskList = () => {
         tasksContainerDiv.textContent = "";
+        Pubsub.publish("taskListContentEmptied", null);
+        console.log("TASK LIST EMPTIED");
     }
     Pubsub.subscribe("clearTaskList", clearTaskList);
     const createTaskDiv = (task, container) => {

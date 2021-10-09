@@ -78,6 +78,7 @@ const inboxProject = (() => {
         Data.getTasksDueToday().forEach(task => console.log(task.toString()));
         return inbox;
     }
+    
 
 })();
 
@@ -96,6 +97,11 @@ const todayProject = (() => {
         todayTasks.forEach(task => today.addTask(task));
         return today;
     }
+    const simulateClickOnTodayProject = () => {
+        console.log("CLICKING TODAY");
+        todayProjectDiv.click();
+    }
+    Pubsub.subscribe("taskListContentEmptied", simulateClickOnTodayProject);
     
 })();
 const thisWeek = (() => {

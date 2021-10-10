@@ -7,19 +7,29 @@
 
 header{
     display:flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    padding:1rem;
+    padding:1rem 2rem;
     color:white;
     text-shadow: white 2px 2px 2px;
     background-color: rgb(119, 0, 255);
 }
-
 .main-content{
     display:flex;
     flex-flow: row nowrap;
     min-height: 100vh;
 
+}
+.menu-span{
+    display:flex;
+    align-items: center;
+    border-radius: 30%;
+    transition: all 0.2s ease-in-out;
+    padding:0.5rem;
+    text-shadow: white 1px 1px 1px;
+}
+.menu-span:hover{
+    background-color: rgba(250,250,250, 0.3);
 }
 .sidebar{
     display:flex;

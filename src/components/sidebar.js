@@ -88,7 +88,6 @@ const todayProject = (() => {
     const displayToday = (e) => {
         Pubsub.publish("projectClickedOrUpdated", makeTodayProject(e));
         console.log("TODAY HAS BEEN CLICKED");
-
     }
     todayProjectDiv.addEventListener("click", displayToday);
     const makeTodayProject = (e) => {

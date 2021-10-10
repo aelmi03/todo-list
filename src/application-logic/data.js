@@ -213,4 +213,3 @@ export const Data = (() => {
     Pubsub.subscribe("taskDeleted", deleteTaskFromData);
     return {getProjects, getProject, getAllTasks, addProject, getAllTasksForAProject, allTasksNotBelongingToAProject, getTasksDueToday, getTasksDueThisWeek};
 })();
-Pubsub.publish("pageHasBeenLoaded");

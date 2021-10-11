@@ -166,6 +166,11 @@ li{
     border-radius: 8px;
     font-size:1rem;
 }
+.add-project-buttons > button{
+    width:7rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: bold;
+}
 .add-project-modal > input{
     border-radius: 6px;
     padding:0.2rem 0.4rem;
@@ -279,6 +284,9 @@ label, .task > p {
 }
 .add-task-buttons > button{
     padding:0.7rem 0.9rem;
+    width:8rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: bold;
 }
 
 .add-task-modal > input{

@@ -120,6 +120,7 @@ h2{
     margin-top:2.5rem;
     border-radius: 5px;
     font-weight: bold;
+    z-index:1;
     padding:0.4rem 1.8rem;
     color:black;
     background-color: white;
@@ -139,7 +140,8 @@ li{
     list-style: none;
 }
 .add-project-modal{
-    display:flex;
+    z-index:2;
+    display:none;
     opacity: 0;
     flex-flow: column nowrap;
     padding:1rem 4rem;
@@ -251,6 +253,7 @@ label, .task > p {
     color:red;
 }
 .add-task-modal{
+    z-index: 2;
     background-color: rgb(255, 255, 255);
     border:2px solid black;
     padding:1.5rem 2.5rem;

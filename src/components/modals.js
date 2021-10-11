@@ -2,33 +2,27 @@ import { Pubsub } from "../application-logic/pubsub";
 import { Task } from "../application-logic/Classes";
 import { Data } from "../application-logic/data";
 export const addProjectModal = (() => {
-    console.log(Pubsub);
     const mainContent = document.querySelector(".main-content");
-    console.log(mainContent);
     const modal = document.querySelector(".add-project-modal");
     const addProjectButton = document.querySelector(".add-project");
     const modalText = document.querySelector("#add-project-input");
     const warningText = document.querySelector(".warning-text");
-    const showModal = () => {
-        if(modal.style.opacity == "1"){
-            modal.style.opacity = "0";
-            mainContent.style.pointerEvents = "auto";
-        }
-        else if(modal.style.opacity = "0"){
+    const showModal = () => { 
             modal.style.opacity = "1";
+            modal.style.display = "flex";
             mainContent.style.pointerEvents = "none";
-        }
-
     }
     const closeModalButton = document.querySelector(".project-cancel");
     const closeModal = (e) => {
         modal.style.opacity = "0";
+        setTimeout(() => {
+            modal.style.display = "none";
+        },400);
         modalText.value = "";
         mainContent.style.pointerEvents = "auto";
         warningText.textContent = "";
     }
     const addNewProjectButton = document.querySelector(".project-add");
-    console.log(addNewProjectButton);
     const addNewProject = (e) => {
         if(!(modalText.value)){
             warningText.textContent = "Project name field cannot be empty";
@@ -122,8 +116,6 @@ export const mainModal = (() => {
             document.body.removeChild(e.target.parentNode.parentNode);
          }, 550);
         mainContent.style.pointerEvents = "auto";
-
-       
     }
     const showWarningText = () => {
         const warningText = document.querySelector(".add-task-warning-text");
@@ -134,7 +126,6 @@ export const mainModal = (() => {
             return true;
         }
         return false;
-
     }
     return{createModal, deleteModal, checkAllValuesAreFilled, showWarningText};
 

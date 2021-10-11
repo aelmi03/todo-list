@@ -60,27 +60,29 @@ export const sideBarModule = (() => {
 })();
 
 const inboxProject = (() => {
-    const inbox = document.querySelector(`div[project-name = "Inbox"]`);
+    const inboxDiv = document.querySelector(`div[project-name = "Inbox"]`);
     const displayInbox = (e) => {
         Pubsub.publish("projectClickedOrUpdated", makeInboxProject(e));
     }
-    inbox.addEventListener("click", displayInbox);
+    inboxDiv.addEventListener("click", displayInbox);
     const makeInboxProject = (e) => {
         initializeProject("Inbox");
         sideBarModule.makeActiveProject(e);
-        const inbox = Data.getProject("Inbox");
+        const projectData = loadInboxData();
+        return projectData;
+    }
+    const loadInboxData = () => {
+        const inboxProject = Data.getProject("Inbox");
         const inboxSpecificTasks = Data.getAllTasksForAProject("Inbox");
         const tasksNotSpecificToInbox = Data.allTasksNotBelongingToAProject("Inbox");
         console.log("TASKS NOT SPECIFIC");
         tasksNotSpecificToInbox.forEach(task => console.log(task.toString()));
-        inbox.removeAllTasks();  
-        [...inboxSpecificTasks, ...tasksNotSpecificToInbox].forEach(task => inbox.addTask(task));
+        inboxProject.removeAllTasks();  
+        [...inboxSpecificTasks, ...tasksNotSpecificToInbox].forEach(task => inboxProject.addTask(task));
         console.log("TASKS DUE TODAY");
         Data.getTasksDueToday().forEach(task => console.log(task.toString()));
-        return inbox;
+        return inboxProject;
     }
-    
-
 })();
 
 const todayProject = (() => {

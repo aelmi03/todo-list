@@ -124,9 +124,15 @@ export const Data = (() => {
     const getAllTasks = () => {
         let tasks = new Set();
         projectArray.forEach(project => {
-           if(project.getProjectName() == "Today" || project.getProjectName() =="This Week") return;
-           project.getAllTasks().forEach(task => tasks.add(task));
+           if(project.getProjectName() == "Today" || project.getProjectName() == "This Week") return;
+           project.getAllTasks().forEach(task => {
+               if(getProject(task.getProject().getProjectName()) === undefined) return;
+               tasks.add(task)
+            });
         });
+        console.log("HERES THE TASKS");
+        console.log(tasks);
+        console.log(projectArray.length);
         return tasks;
     }
     const getAllTasksForAProject = (projectName) => {

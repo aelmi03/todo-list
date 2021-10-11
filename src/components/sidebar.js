@@ -4,10 +4,8 @@ import {Data} from './../application-logic/data';
 
 export const sideBarModule = (() => {
     const render =  (arrayOfProjects) => {
-        console.log("HEYY");
         const projectListContainer = document.querySelector(".project-list");
         projectListContainer.textContent = "";
-        console.log(arrayOfProjects);
         arrayOfProjects.forEach(project => createProjectDiv(project, projectListContainer));
     }
 
@@ -38,7 +36,6 @@ export const sideBarModule = (() => {
             mainDiv = mainDiv.parentNode;
         }
         makeAllProjectNotActive();
-        console.log("ADDING ACTIVE CLASS");
         mainDiv.classList.add("active-project");
     }
     const makeAllProjectNotActive = () => {
@@ -75,12 +72,8 @@ const inboxProject = (() => {
         const inboxProject = Data.getProject("Inbox");
         const inboxSpecificTasks = Data.getAllTasksForAProject("Inbox");
         const tasksNotSpecificToInbox = Data.allTasksNotBelongingToAProject("Inbox");
-        console.log("TASKS NOT SPECIFIC");
-        tasksNotSpecificToInbox.forEach(task => console.log(task.toString()));
         inboxProject.removeAllTasks();  
         [...inboxSpecificTasks, ...tasksNotSpecificToInbox].forEach(task => inboxProject.addTask(task));
-        console.log("TASKS DUE TODAY");
-        Data.getTasksDueToday().forEach(task => console.log(task.toString()));
         return inboxProject;
     }
 })();
@@ -89,7 +82,6 @@ const todayProject = (() => {
     const todayProjectDiv = document.querySelector(`div[project-name = "Today"]`);
     const displayToday = (e) => {
         Pubsub.publish("projectClickedOrUpdated", makeTodayProject(e));
-        console.log("TODAY HAS BEEN CLICKED");
     }
     todayProjectDiv.addEventListener("click", displayToday);
     const makeTodayProject = (e) => {
@@ -102,7 +94,6 @@ const todayProject = (() => {
         return today;
     }
     const simulateClickOnTodayProject = () => {
-        console.log("CLICKING TODAY");
         todayProjectDiv.click();
     }
     Pubsub.subscribe("taskListContentEmptied", simulateClickOnTodayProject);  
@@ -119,8 +110,6 @@ const thisWeek = (() => {
         sideBarModule.makeActiveProject(e);
         const thisWeek = Data.getProject("This Week");
         const thisWeekTasks = Data.getTasksDueThisWeek();
-        console.log("this week tasks");
-        console.log(thisWeekTasks);
         thisWeek.removeAllTasks();
         thisWeekTasks.forEach(task => thisWeek.addTask(task));
         return thisWeek;

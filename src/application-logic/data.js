@@ -6,22 +6,15 @@ export const Data = (() => {
     
     const getDataFromLocalStorage = () => {
         const projectTemplate  = JSON.parse(localStorage.getItem("Projects")) || [];
-        console.log("PROJECTS TEMPLATE");
-        console.log(projectTemplate);
         const projects = [];
+        //retrieving the objects that just have their properties attached and "reviving" them with my classes
         projectTemplate.forEach(projectObject => {
             const retrievingProject = Project(projectObject.projectName);
             const projectTasks = projectObject.tasks;
             projectTasks.forEach(taskTemplate => {
-                console.log("GETTING INFO ON INBOX");
-                console.log(taskTemplate.taskProject);
-                console.log(projectObject.projectName);
                 if(taskTemplate.taskProject !== projectObject.projectName){
                     return;
                 }
-                console.log("TASK TEMPLATE");
-                console.log(taskTemplate);
-                console.log(taskTemplate.taskTitle);
                 const newTask = Task(taskTemplate.taskTitle, taskTemplate.taskDescription, taskTemplate.taskDueDate, taskTemplate.taskPriority,
                     taskTemplate.taskCompletionStatus, taskTemplate.taskID );
                 newTask.setProject(retrievingProject);
@@ -98,18 +91,15 @@ export const Data = (() => {
     }
     const checkIfTaskDoesNotBelongToSpecialProject = (projectName, taskID, projectTaskBelongsTo) => {
         if(sideBarModule.currentSelectedProject() === projectName && projectTaskBelongsTo != projectName){
-            console.log("REMOVING SPECIAL PROJECT HEHEH");
             removeFromSpecialProject(projectName,taskID);
         }
     }
     const removeFromSpecialProject = (projectName, taskID) => {
         const specialProject = getProject(projectName);
-        console.log(taskID);
         specialProject.deleteTaskByID(taskID);
     }
     const allTasksNotBelongingToAProject = (projectName) => {
         const allTasks = Array.from(getAllTasks());
-        allTasks.forEach(task => console.log(task.toString()));
         const tasksNotBelongingToProject = allTasks.filter(task => {
             if(task.hasBeenDeleted() === true){
                 return false;
@@ -130,9 +120,6 @@ export const Data = (() => {
                tasks.add(task)
             });
         });
-        console.log("HERES THE TASKS");
-        console.log(tasks);
-        console.log(projectArray.length);
         return tasks;
     }
     const getAllTasksForAProject = (projectName) => {
@@ -209,7 +196,6 @@ export const Data = (() => {
            return newObject;
        });
        localStorage.setItem("Projects", JSON.stringify(newData));
-       console.log("RETRIEVING THEM");       
     }
     
     Pubsub.subscribe("taskUpdated", updateTask);
